@@ -12,4 +12,13 @@ public static class GetProizvodi
         var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
         return Results.Ok(proizvodi?.Products);
     }
+ 
+    public static async Task<IResult> GetProizvodAsync(IHttpClientFactory factory, int id)
+    {
+        var http = factory.CreateClient("nesto");
+        var response = await http.GetAsync($"/products/{id}");
+        response.EnsureSuccessStatusCode();
+        var proizvod = await response.Content.ReadFromJsonAsync<ProizvodiDto>();
+        return Results.Ok(proizvod);
+    }
 }

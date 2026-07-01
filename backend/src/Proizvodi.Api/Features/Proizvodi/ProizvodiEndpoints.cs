@@ -5,5 +5,6 @@ public static class ProizvodiEndpoints
     public static void MapProizvodiEndpoints(this WebApplication app)
     {
         app.MapGet("/proizvodi", GetProizvodi.GetProizvodiAsync);
+        app.MapGet("/proizvodi/{id:int}", GetProizvodi.GetProizvodAsync);
     }
 }

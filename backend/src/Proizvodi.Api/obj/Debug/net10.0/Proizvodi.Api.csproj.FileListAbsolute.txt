@@ -26,3 +26,4 @@
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.pdb
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.genruntimeconfig.cache
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/ref/Proizvodi.Api.dll
+/Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.sourcelink.json

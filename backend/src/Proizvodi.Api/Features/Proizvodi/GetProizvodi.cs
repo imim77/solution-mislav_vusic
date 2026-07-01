@@ -1,3 +1,5 @@
+using System.Net.Http.Json;
+
 namespace Proizvodi.Api.Features.Proizvodi;
 
 public static class GetProizvodi
@@ -7,7 +9,7 @@ public static class GetProizvodi
         var http = factory.CreateClient("nesto");
         var response = await http.GetAsync("/products");
         response.EnsureSuccessStatusCode();
-        var json = await response.Content.ReadAsStringAsync();
-        return Results.Content(json, "application/json");
+        var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
+        return Results.Ok(proizvodi?.Products);
     }
 }

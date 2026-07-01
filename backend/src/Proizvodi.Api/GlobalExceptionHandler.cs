@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net.Http;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Proizvodi.Api;
@@ -36,6 +37,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
     {
         return exception switch
         {
+            HttpRequestException => (StatusCodes.Status502BadGateway, "External service error"),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error"),
         };
     }

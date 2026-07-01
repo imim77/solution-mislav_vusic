@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,23 @@ public class GlobalExceptionHandler_Tests
 
         Assert.True(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, httpContext.Response.StatusCode);
+        Assert.Single(logger.Logs);
+        Assert.Equal(LogLevel.Error, logger.Logs[0].Level);
+        Assert.Same(exception, logger.Logs[0].Exception);
+    }
+
+    [Fact]
+    public async Task TryHandleAsync_HttpRequestException_ReturnsTrueAndSetsBadGateway()
+    {
+        var logger = new FakeLogger();
+        var handler = new GlobalExceptionHandler(logger);
+        var httpContext = CreateHttpContext();
+        var exception = new HttpRequestException("External API failed");
+
+        var result = await handler.TryHandleAsync(httpContext, exception, CancellationToken.None);
+
+        Assert.True(result);
+        Assert.Equal(StatusCodes.Status502BadGateway, httpContext.Response.StatusCode);
         Assert.Single(logger.Logs);
         Assert.Equal(LogLevel.Error, logger.Logs[0].Level);
         Assert.Same(exception, logger.Logs[0].Exception);

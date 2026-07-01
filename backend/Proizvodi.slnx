@@ -1,6 +1,6 @@
 <Solution>
-  <Folder Name="/backend/" />
-  <Folder Name="/backend/src/">
-    <Project Path="backend/src/Proizvodi.Api/Proizvodi.Api.csproj" />
-  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/tests/" />
+  <Project Path="src/Proizvodi.Api/Proizvodi.Api.csproj" />
+  <Project Path="tests/Proizvodi.UnitTests/Proizvodi.UnitTests.csproj" />
 </Solution>

@@ -1,44 +1,65 @@
 using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Proizvodi.Api;
 
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger,IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
-    private readonly ILogger<GlobalExceptionHandler> logger = logger;
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
-
-        logger.LogError(
-            exception,
-            "Could not process a request on machine {MachineName}. TraceId: {TraceId}",
-            Environment.MachineName,
-            traceId
-        );
-
+        logger.LogError(exception, "Unhandled exception occurred. TraceId: {TraceId}",httpContext.TraceIdentifier);
         var (statusCode, title) = MapException(exception);
+        httpContext.Response.StatusCode = statusCode;
 
-        await Results.Problem(
-            title: title,
-            statusCode: statusCode,
-            extensions: new Dictionary<string, object?>
-            {
-                {"traceId", traceId}
-            }
-        ).ExecuteAsync(httpContext);
+        var problemDetails = CreateProblemDetails(statusCode, title, exception, httpContext);
 
-        return true;
+        problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
+        problemDetails.Extensions["timestamp"] = DateTime.UtcNow;
+
+        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+        {
+            HttpContext = httpContext,
+            ProblemDetails = problemDetails
+        });
     }
 
-    private static (int StatusCode, string Title)  MapException(Exception exception)
+    private static (int StatusCode, string Title) MapException(Exception exception) => exception switch
     {
-        return exception switch
+        AppException appEx => ((int)appEx.StatusCode, appEx.Message),
+        ArgumentNullException => (StatusCodes.Status400BadRequest, "Invalid argument provided"),
+        ArgumentException => (StatusCodes.Status400BadRequest, "Invalid argument provided"),
+        UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
+        _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred")
+    };
+
+
+    private static string GetProblemType(int statusCode) => statusCode switch
+    {
+        400 => "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+        401 => "https://tools.ietf.org/html/rfc9110#section-15.5.2",
+        403 => "https://tools.ietf.org/html/rfc9110#section-15.5.4",
+        404 => "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+        409 => "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+        _ => "https://tools.ietf.org/html/rfc9110#section-15.6.1"
+    };
+
+    private static string? GetSafeErrorMessage(Exception exception)
+    {
+        return exception is AppException ? exception.Message : null;
+    }
+
+    private static ProblemDetails CreateProblemDetails(int statusCode, string? title, Exception exception, HttpContext httpContext)
+    {
+        return new ProblemDetails
         {
-            HttpRequestException => (StatusCodes.Status502BadGateway, "External service error"),
-            _ => (StatusCodes.Status500InternalServerError, "Internal Server Error"),
+            Status = statusCode,
+            Title = title,
+            Type = GetProblemType(statusCode),
+            Instance = httpContext.Request.Path,
+            Detail = GetSafeErrorMessage(exception)
         };
     }
 }

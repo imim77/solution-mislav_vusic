@@ -18,8 +18,8 @@ function App() {
 
   return (
     <div>
-      {products.map((product, index) => (
-        <ProductCard key={index} />
+      {products.map((product) => (
+        <ProductCard key={product.title} {...product} />
       ))}
     </div>
   )

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import ProductCard from './components/ProductCard'
+import ProductCard from './components/ProductList'
 import { Client } from './Client'
 import type { Product } from './models/Products'
 import ProductListFilters, { type ProductFilters } from './components/ProductListFilters'
@@ -26,9 +26,7 @@ function App() {
   return (
     <div>
       <ProductListFilters onChange={handleFiltersChange} />
-      {products.map((product) => (
-        <ProductCard key={product.title} {...product} />
-      ))}
+      <ProductCard products={products} />
     </div>
   )
 }

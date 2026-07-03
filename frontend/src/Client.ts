@@ -9,7 +9,7 @@ export class Client
             throw new Error("Problem with response");
         }
         const data: Product[] = await response.json();
-        return data;
+        return data ?? [];
     }
 
     async searchProducts(q: string){
@@ -21,7 +21,7 @@ export class Client
             throw new Error("Problem with response");
         }
         const data: Product[] = await response.json();
-        return data;
+        return data ?? [];
     }
 
     private async fetchData(url: string){

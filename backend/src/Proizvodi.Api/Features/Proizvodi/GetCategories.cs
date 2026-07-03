@@ -17,8 +17,17 @@ public class GetCategories
         var http = factory.CreateClient("nesto");
         var response = await http.GetAsync($"/products/category/{slug}");
         response.EnsureSuccessStatusCode();
-        var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
-        
-        return Results.Ok(proizvodi);
+        var data = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
+
+        var products = data?.Products ?? [];
+
+        if (minPrice.HasValue)
+        products = products.Where(p => p.Price >= minPrice.Value).ToList();
+
+        if (maxPrice.HasValue)
+        products = products.Where(p => p.Price <= maxPrice.Value).ToList();
+
+        return Results.Ok(products);
+ 
     }
 }

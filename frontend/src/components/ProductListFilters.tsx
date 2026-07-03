@@ -13,7 +13,20 @@ type ProductListFiltersProps = {
     onChange: (filters: ProductFilters) => void;
 };
 
+function useDebounce<T>(value: T, delay = 500): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay)
+    
+    return ()=> {
+      clearTimeout(handler);
+    }
 
+  }, [value, delay]);
+  return debouncedValue;
+}
 
 function ProductListFilters({onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>('');

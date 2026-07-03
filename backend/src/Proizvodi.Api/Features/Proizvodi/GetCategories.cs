@@ -12,12 +12,13 @@ public class GetCategories
         var proizvodi = await response.Content.ReadFromJsonAsync<List<CategoriesDto>>();
         return Results.Ok(proizvodi);
     }
-    public static async Task<IResult> GetCategoyItems(IHttpClientFactory factory, string slug)
+    public static async Task<IResult> GetCategoyItems(IHttpClientFactory factory, string slug, decimal? minPrice, decimal? maxPrice)
     {
         var http = factory.CreateClient("nesto");
         var response = await http.GetAsync($"/products/category/{slug}");
         response.EnsureSuccessStatusCode();
         var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
+        
         return Results.Ok(proizvodi);
     }
 }

@@ -1,8 +1,10 @@
 import React from 'react'
 
+
+
 function ProductCard() {
   return (
-    <div>Pozz iz product card</div>
+    <div>Product sa id-em:</div>
   )
 }
 

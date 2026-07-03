@@ -18,7 +18,10 @@ function App() {
 
   const handleFiltersChange = (filters: ProductFilters) => {
     const client = new Client()
-    client.searchProducts(filters.search)
+    const request = filters.slug
+      ? client.getProductsByCategory(filters.slug, filters.minPrice, filters.maxPrice)
+      : client.searchProducts(filters.search);
+    request
       .then(data => setProducts(data))
       .catch(err => console.error(err))
   };

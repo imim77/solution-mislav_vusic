@@ -1,3 +1,5 @@
+using Proizvodi.Api.Features.Proizvodi;
+
 namespace Proizvodi.Api.Features.Categories;
 
 public class GetCategories
@@ -8,6 +10,14 @@ public class GetCategories
         var response = await http.GetAsync("/products/categories");
         response.EnsureSuccessStatusCode();
         var proizvodi = await response.Content.ReadFromJsonAsync<List<CategoriesDto>>();
+        return Results.Ok(proizvodi);
+    }
+    public static async Task<IResult> GetCategoyItems(IHttpClientFactory factory, string slug)
+    {
+        var http = factory.CreateClient("nesto");
+        var response = await http.GetAsync($"/products/category/{slug}");
+        response.EnsureSuccessStatusCode();
+        var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
         return Results.Ok(proizvodi);
     }
 }

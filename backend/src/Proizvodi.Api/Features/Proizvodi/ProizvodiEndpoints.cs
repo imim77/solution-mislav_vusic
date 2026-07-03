@@ -10,5 +10,6 @@ public static class ProizvodiEndpoints
         app.MapGet("/proizvodi/search", GetProizvodi.GetProizvodByTextInput);
         app.MapGet("/proizvodi/{id:int}", GetProizvodi.GetProizvodAsync);
         app.MapGet("/proizvodi/categories", GetCategories.GetCategoriesAsync);
+        app.MapGet("/proizvodi/categories/{slug}", GetCategories.GetCategoyItems);
     }
 }

@@ -21,4 +21,18 @@ public static class GetProizvodi
         var proizvod = await response.Content.ReadFromJsonAsync<ProizvodiDto>();
         return Results.Ok(proizvod);
     }
+    public static async Task<IResult> GetProizvodByTextInput(IHttpClientFactory factory, string? q)
+    {
+        if (string.IsNullOrWhiteSpace(q))
+        {
+            return Results.BadRequest("Search term is required.");
+        }
+
+        var http = factory.CreateClient("nesto");
+        var response = await http.GetAsync($"/products/search?q={Uri.EscapeDataString(q)}");
+        response.EnsureSuccessStatusCode();
+        var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
+        return Results.Ok(proizvodi?.Products);
+    }
+
 }

@@ -12,6 +12,7 @@
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.AssemblyInfo.cs
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.csproj.CoreCompileInputs.cache
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.MvcApplicationPartsAssemblyInfo.cache
+/Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.sourcelink.json
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
@@ -26,4 +27,3 @@
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.pdb
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.genruntimeconfig.cache
 /Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/ref/Proizvodi.Api.dll
-/Users/mislavvusic/dot_net/solution-mislav-vusic/backend/src/Proizvodi.Api/obj/Debug/net10.0/Proizvodi.Api.sourcelink.json

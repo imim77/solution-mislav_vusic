@@ -12,6 +12,18 @@ export class Client
         return data;
     }
 
+    async searchProducts(q: string){
+        if (!q.trim()) {
+            return this.getProducts();
+        }
+        const response = await this.fetchData(`${this.baseUrl}/proizvodi/search?q=${encodeURIComponent(q)}`);
+        if(!response.ok){
+            throw new Error("Problem with response");
+        }
+        const data: Product[] = await response.json();
+        return data;
+    }
+
     private async fetchData(url: string){
         try{
             const response = await fetch(url);

@@ -5,8 +5,7 @@ type ProductListProps = {
 }
 
 
-
-function ProductCard({products}: ProductListProps) {
+export default function ProductCard({products}: ProductListProps) {
   return (
     <div className='flex flex-row flex-wrap gap-4'>
     {products.map((product) => (
@@ -26,4 +25,3 @@ function ProductCard({products}: ProductListProps) {
   )
 }
 
-export default ProductCard

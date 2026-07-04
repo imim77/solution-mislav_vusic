@@ -11,19 +11,27 @@ export type ProductFilters = {
 };
 
 type ProductListFiltersProps = {
+    initialFilters: ProductFilters;
     onChange: (filters: ProductFilters) => void;
 };
 
 
-function ProductListFilters({onChange}: ProductListFiltersProps) {
-  const [search, setSearch] = useState<ProductFilters['search']>('');
+function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps) {
+  const [search, setSearch] = useState<ProductFilters['search']>(initialFilters.search);
   const debouncedSearch = useDebounce(search);
-  const [category, setCategory] = useState<ProductFilters['slug']>('');
-  const [minPrice, setMinPrice] = useState<ProductFilters['minPrice']>(null);
-  const [maxPrice, setMaxPrice] = useState<ProductFilters['maxPrice']>(null);
+  const [category, setCategory] = useState<ProductFilters['slug']>(initialFilters.slug);
+  const [minPrice, setMinPrice] = useState<ProductFilters['minPrice']>(initialFilters.minPrice);
+  const [maxPrice, setMaxPrice] = useState<ProductFilters['maxPrice']>(initialFilters.maxPrice);
   const debouncedMinPrice = useDebounce(minPrice);
   const debouncedMaxPrice = useDebounce(maxPrice);
   const [categories, setCategories] = useState<Categories[]>([]);
+
+  useEffect(() => {
+    setSearch(initialFilters.search);
+    setCategory(initialFilters.slug);
+    setMinPrice(initialFilters.minPrice);
+    setMaxPrice(initialFilters.maxPrice);
+  }, [initialFilters.search, initialFilters.slug, initialFilters.minPrice, initialFilters.maxPrice]);
 
   useEffect(() => {
     const client = new Client();

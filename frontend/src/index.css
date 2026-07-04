@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+:root{ 
+  
+}
+
+@theme { 
+  --color-greyscale-700: #1E1E23;
+}

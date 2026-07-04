@@ -15,3 +15,21 @@ public record ProizvodiDto(
     [Required][StringLength(100)] string Description,
     [Required] string Thumbnail
 );
+
+public record LoginRequest(
+    string username,
+    string password,
+    int? ExpiresInMins
+);
+
+public record LoginResponse(
+    int Id,
+    string Username,
+    string Email,
+    string FirstName,
+    string LastName,
+    string Gender,
+    string Image,
+    string AccessToken,
+    string RefreshToken
+);

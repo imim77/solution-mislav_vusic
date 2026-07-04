@@ -11,5 +11,6 @@ public static class ProizvodiEndpoints
         app.MapGet("/proizvodi/{id:int}", GetProizvodi.GetProizvodAsync);
         app.MapGet("/proizvodi/categories", GetCategories.GetCategoriesAsync);
         app.MapGet("/proizvodi/categories/{slug}", GetCategories.GetCategoyItems);
+        app.MapPost("/proizvodi/login", GetProizvodi.PostUserCredentials);
     }
 }

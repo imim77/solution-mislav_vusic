@@ -40,5 +40,13 @@ public static class GetProizvodi
         var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
         return Results.Ok(proizvodi?.Products);
     }
+    public static async Task<IResult> PostUserCredentials(IHttpClientFactory factory, LoginRequest request)
+    {
+        var http = factory.CreateClient("nesto");
+        var response = await http.PostAsJsonAsync("/auth/login", request);
+        response.EnsureSuccessStatusCode();
+        var login = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        return Results.Ok(login);
+    }
 
 }

@@ -19,8 +19,10 @@ function ProductListFilters({onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>('');
   const debouncedSearch = useDebounce(search);
   const [category, setCategory] = useState<ProductFilters['slug']>('');
-  //const [minPrice, setminPrice] = useState<ProductFilters['minPrice']>(null);
-  //const [maxPrice, setmaxPrice] = useState<ProductFilters['maxPrice']>(null);
+  const [minPrice, setMinPrice] = useState<ProductFilters['minPrice']>(null);
+  const [maxPrice, setMaxPrice] = useState<ProductFilters['maxPrice']>(null);
+  const debouncedMinPrice = useDebounce(minPrice);
+  const debouncedMaxPrice = useDebounce(maxPrice);
   const [categories, setCategories] = useState<Categories[]>([]);
 
   useEffect(() => {
@@ -31,8 +33,14 @@ function ProductListFilters({onChange}: ProductListFiltersProps) {
   }, []);
 
   useEffect(() => {
-    onChange({search: debouncedSearch, slug: category, minPrice: null, maxPrice: null});
-  }, [debouncedSearch, category]);
+    onChange({search: debouncedSearch, slug: category, minPrice: debouncedMinPrice, maxPrice: debouncedMaxPrice});
+  }, [debouncedSearch, category, debouncedMinPrice, debouncedMaxPrice]);
+
+  const parsePrice = (value: string): number | null => {
+    if (value.trim() === '') return null;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  };
 
   return (
     <div className="flex flex-row gap-2">
@@ -43,7 +51,20 @@ function ProductListFilters({onChange}: ProductListFiltersProps) {
                 <option key={c.slug} value={c.slug}>{c.name}</option>
             ))}
         </select>
-
+        <input
+            type="number"
+            min={0}
+            value={minPrice ?? ''}
+            onChange={(e) => setMinPrice(parsePrice(e.target.value))}
+            placeholder="Min price"
+        />
+        <input
+            type="number"
+            min={0}
+            value={maxPrice ?? ''}
+            onChange={(e) => setMaxPrice(parsePrice(e.target.value))}
+            placeholder="Max price"
+        />
     </div>
 
   )

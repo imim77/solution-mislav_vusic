@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Client } from "../Client";
 import type { Categories } from "../models/Categories";
+import {useDebounce} from "../hooks/useDebounce";
 
 export type ProductFilters = {
   search: string;
@@ -13,25 +14,13 @@ type ProductListFiltersProps = {
     onChange: (filters: ProductFilters) => void;
 };
 
-function useDebounce<T>(value: T, delay = 500): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay)
-    
-    return ()=> {
-      clearTimeout(handler);
-    }
-
-  }, [value, delay]);
-  return debouncedValue;
-}
 
 function ProductListFilters({onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>('');
   const debouncedSearch = useDebounce(search);
   const [category, setCategory] = useState<ProductFilters['slug']>('');
+  //const [minPrice, setminPrice] = useState<ProductFilters['minPrice']>(null);
+  //const [maxPrice, setmaxPrice] = useState<ProductFilters['maxPrice']>(null);
   const [categories, setCategories] = useState<Categories[]>([]);
 
   useEffect(() => {

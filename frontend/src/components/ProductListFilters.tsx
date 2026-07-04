@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Client } from "../Client";
-import type { Categories } from "../models/Categories";
 import {useDebounce} from "../hooks/useDebounce";
 
 export type ProductFilters = {
@@ -15,6 +15,7 @@ type ProductListFiltersProps = {
     onChange: (filters: ProductFilters) => void;
 };
 
+const client = new Client();
 
 function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>(initialFilters.search);
@@ -24,25 +25,15 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
   const [maxPrice, setMaxPrice] = useState<ProductFilters['maxPrice']>(initialFilters.maxPrice);
   const debouncedMinPrice = useDebounce(minPrice);
   const debouncedMaxPrice = useDebounce(maxPrice);
-  const [categories, setCategories] = useState<Categories[]>([]);
-
-  useEffect(() => {
-    setSearch(initialFilters.search);
-    setCategory(initialFilters.slug);
-    setMinPrice(initialFilters.minPrice);
-    setMaxPrice(initialFilters.maxPrice);
-  }, [initialFilters.search, initialFilters.slug, initialFilters.minPrice, initialFilters.maxPrice]);
-
-  useEffect(() => {
-    const client = new Client();
-    client.getCategories()
-      .then(data => setCategories(data))
-      .catch(err => console.error(err));
-  }, []);
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => client.getCategories(),
+  });
+  const categories = categoriesQuery.data ?? [];
 
   useEffect(() => {
     onChange({search: debouncedSearch, slug: category, minPrice: debouncedMinPrice, maxPrice: debouncedMaxPrice});
-  }, [debouncedSearch, category, debouncedMinPrice, debouncedMaxPrice]);
+  }, [debouncedSearch, category, debouncedMinPrice, debouncedMaxPrice, onChange]);
 
   const parsePrice = (value: string): number | null => {
     if (value.trim() === '') return null;
@@ -55,6 +46,9 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
         <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products" />
         <select value={category} onChange={(e) => setCategory(e.target.value as ProductFilters['slug'])}>
             <option value="">All categories</option>
+            {categoriesQuery.isError && (
+                <option value="" disabled>Unable to load categories</option>
+            )}
             {categories.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.name}</option>
             ))}

@@ -1,7 +1,7 @@
 import type { Product } from './models/Products'
 import type { Categories } from './models/Categories'
 
-export class Client
+export class  Client
 {   
     private baseUrl = '/api';
     async getProducts(){
@@ -53,7 +53,9 @@ export class Client
             const response = await fetch(url);
             return response;
         }catch(error){
-            throw new Error('We are currently experiencing issues loading the data');
+            throw new Error('We are currently experiencing issues loading the data', { cause: error });
         }
     }
 }
+
+export const client = new Client();

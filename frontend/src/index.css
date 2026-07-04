@@ -1,9 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
 @import "tailwindcss";
+/* Korišten GPT 5.5 u OpenCode harnessu sa Anthropic frontend-design skillom.
+/* AI PROMPT: You are an expert in UI design. My goal is to have a very nicely designed website and i need your help. Modify
+the index.css file with new styles. Use your /frontend-design skill. DO NOT MODIFY ANY FILE APART FROM index.css!!!
 
-:root{ 
-  
+
+
+/* ----------------------------------------------------------------------------
+   Design tokens
+   Subject: a small storefront / stockroom catalogue. Constraint: the existing
+   greyscale-700 (#f3f3f3) must stay — it is the paper-grey used for cards,
+   inputs and the active pagination pill. Everything else is built around it:
+   a cool concrete-grey page floor, an ink-near-black text, and one oxblood
+   accent borrowed from shop-awning stripes, used with restraint.
+---------------------------------------------------------------------------- */
+@theme {
+  /* Preserved */
+  --color-greyscale-700: #f3f3f3;
+
+  /* Greyscale ramp (700 kept as the "paper" token; surrounding ramps are cool grey) */
+  --color-greyscale-50:  #ffffff;
+  --color-greyscale-100: #f7f7f8;
+  --color-greyscale-200: #ececee; /* page floor: concrete */
+  --color-greyscale-300: #d9d9de;
+  --color-greyscale-400: #b6b6be;
+  --color-greyscale-500: #86868f;
+  --color-greyscale-600: #595a63;
+  --color-greyscale-800: #2a2a31;
+  --color-greyscale-900: #14141a; /* ink */
+
+  /* Oxblood / awning-stripe accent — used only where it earns its place */
+  --color-accent-500: #8a2424;
+  --color-accent-600: #7a1f1f;
+  --color-accent-700: #6e1f1f;
+  --color-accent-800: #561515;
+
+  /* Type system: a grotesque sign face + a humanist shelf face + mono numerals */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body:   "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:   "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
-@theme { 
-  --color-greyscale-700: #1E1E23;
+/* ----------------------------------------------------------------------------
+   Base
+---------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #fff;
+    color: var(--color-greyscale-900);
+    font-family: var(--font-body);
+    font-feature-settings: "ss01", "cv01";
+    min-height: 100dvh;
+  }
+
+  /* Headings borrow the sign face; tight tracking keeps the storefront feel */
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.05;
+  }
+
+  /* Whisper the accent into links — present on hover, never shouting */
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .18s ease;
+  }
+  a:hover {
+    color: var(--color-accent-700);
+  }
+
+  /* Native inputs inherit the shelf face; quiet borders lift them off the floor */
+  input,
+  select,
+  button {
+    font-family: inherit;
+  }
+  input::placeholder {
+    color: var(--color-greyscale-500);
+  }
+
+  /* Keyboard focus: a single, recognizable accent ring across the app */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-700);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-accent-700);
+    color: #fff;
+  }
+
+  /* Numerals read as data: prices, page numbers, the "showing X-Y" line */
+  p,
+  nav,
+  button {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: .001ms !important;
+      transition-duration: .001ms !important;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Utility overrides — must live in the utilities layer to win over Tailwind's
+   own utilities (cascade layers: base < utilities). Kept surgical.
+---------------------------------------------------------------------------- */
+@layer utilities {
+  /* Cards: keep the #f3f3f3 paper, but float it off the concrete floor with a
+     hairline edge + a soft, near-zero shadow. Low-opacity so it reads as light. */
+  .bg-greyscale-700 {
+    box-shadow:
+      0 1px 0 0 rgb(20 20 26 / .04),
+      0 8px 24px -18px rgb(20 20 26 / .18);
+  }
+
+  /* Active pagination pill: the one place the accent earns a solid fill —
+     the "current shelf" marker on the awning. */
+  nav button[aria-current="page"] {
+    background-color: var(--color-accent-700);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  /* Chosen price / page numerics (page buttons, the showing-range line) */
+  nav button,
+  nav + p,
+  p[class*="opacity-"] {
+    font-family: var(--font-mono);
+  }
+
+  /* Product price stays mono but leads with the accent so the dollar reads
+     first — the price tag is the atomic unit of a storefront. */
+  .bg-greyscale-700 .flex > p:last-child {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--color-accent-700);
+  }
+
+  /* The "Home / Favorites" links in the navbar act as wayfinding tabs */
+  a[class*=""],
+  nav a {
+    letter-spacing: 0.01em;
+  }
 }

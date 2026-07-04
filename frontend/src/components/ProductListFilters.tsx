@@ -42,9 +42,11 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
   };
 
   return (
-    <div className="flex flex-row gap-2">
-        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products" />
-        <select value={category} onChange={(e) => setCategory(e.target.value as ProductFilters['slug'])}>
+    <div className="flex flex-wrap items-center gap-2 sm:flex-row">
+        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products"
+          className="min-w-[150px] flex-1 rounded-md bg-greyscale-700 p-4" />
+        <select value={category} onChange={(e) => setCategory(e.target.value as ProductFilters['slug'])}
+          className="min-w-[150px] flex-1 rounded-md bg-greyscale-700 p-4">
             <option value="">All categories</option>
             {categoriesQuery.isError && (
                 <option value="" disabled>Unable to load categories</option>
@@ -59,6 +61,7 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
             value={minPrice ?? ''}
             onChange={(e) => setMinPrice(parsePrice(e.target.value))}
             placeholder="Min price"
+            className="min-w-[120px] flex-1 rounded-lg bg-greyscale-700 p-4"
         />
         <input
             type="number"
@@ -66,6 +69,7 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
             value={maxPrice ?? ''}
             onChange={(e) => setMaxPrice(parsePrice(e.target.value))}
             placeholder="Max price"
+            className="min-w-[120px] flex-1 rounded-lg bg-greyscale-700 p-4"
         />
     </div>
 

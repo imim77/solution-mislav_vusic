@@ -1,13 +1,23 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { isAuthenticated } from '../utils/auth'
 
 const links = [
-  { to: '/', label: 'Home' },
-  { to: '/favorites', label: 'Favorites' },
+  { to: '/', label: 'Home', requiresAuth: false },
+  { to: '/favorites', label: 'Favorites', requiresAuth: true },
 ]
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+
+  const handleLinkClick = (e: React.MouseEvent, requiresAuth: boolean) => {
+    setOpen(false)
+    if (requiresAuth && !isAuthenticated()) {
+      e.preventDefault()
+      navigate('/login')
+    }
+  }
 
   return (
     <nav
@@ -28,6 +38,7 @@ function Navbar() {
             <li key={link.to}>
               <NavLink
                 to={link.to}
+                onClick={(e) => handleLinkClick(e, link.requiresAuth)}
                 className={({ isActive }) =>
                   `text-sm font-medium ${
                     isActive
@@ -74,7 +85,7 @@ function Navbar() {
             <li key={link.to}>
               <NavLink
                 to={link.to}
-                onClick={() => setOpen(false)}
+                onClick={(e) => handleLinkClick(e, link.requiresAuth)}
                 className={({ isActive }) =>
                   `block rounded-md px-3 py-2.5 text-sm font-medium ${
                     isActive

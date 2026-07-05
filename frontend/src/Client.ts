@@ -70,7 +70,11 @@ export class  Client
         if(!response.ok){
             throw new Error("Problem with response");
         }
-        return response.json();
+        const data = await response.json();
+        if (data.accessToken) {
+            localStorage.setItem('accessToken', data.accessToken);
+        }
+        return data;
     }
 
     private async fetchData(url: string){

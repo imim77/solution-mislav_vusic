@@ -1,6 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Proizvodi.Api;
+using Proizvodi.Api.Data;
+using Proizvodi.Api.Models;
 
 namespace Proizvodi.Api.Features.Proizvodi;
 
@@ -40,12 +43,42 @@ public static class GetProizvodi
         var proizvodi = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
         return Results.Ok(proizvodi?.Products);
     }
-    public static async Task<IResult> PostUserCredentials(IHttpClientFactory factory, LoginRequest request)
+    public static async Task<IResult> PostUserCredentials(IHttpClientFactory factory, LoginRequest request, ProizvodiContext dbContext)
     {
         var http = factory.CreateClient("nesto");
         var response = await http.PostAsJsonAsync("/auth/login", request);
         response.EnsureSuccessStatusCode();
         var login = await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+        if (login is null)
+        {
+            return Results.BadRequest("Invalid login response.");
+        }
+
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == login.Id);
+
+        if (user is null)
+        {
+            user = new User
+            {
+                Id = login.Id,
+                Username = login.Username,
+                FirstName = login.FirstName,
+                LastName = login.LastName,
+                Email = login.Email,
+                AccessToken = login.AccessToken,
+                RefreshToken = login.RefreshToken
+            };
+            dbContext.Users.Add(user);
+        }
+        else
+        {
+            user.AccessToken = login.AccessToken;
+            user.RefreshToken = login.RefreshToken;
+        }
+
+        await dbContext.SaveChangesAsync();
+
         return Results.Ok(login);
     }
 

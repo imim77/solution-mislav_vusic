@@ -50,6 +50,7 @@ public record LoginResponse(
     string Username, 
     string FirstName,
     string LastName,
+    string Email,
     string Image,
     string AccessToken,
     string RefreshToken

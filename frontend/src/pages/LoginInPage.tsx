@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import type React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { client } from '../Client'
+import { INPUT_CLASS_FULL } from '../constants'
 
-const inputClass = "w-full rounded-lg border border-greyscale-300 bg-greyscale-700 px-4 py-3 text-sm text-greyscale-900 placeholder:text-greyscale-500"
+const inputClass = INPUT_CLASS_FULL
 
 function LoginInPage() {
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -23,6 +25,7 @@ function LoginInPage() {
     try {
       await client.login(username, password)
       setSuccess(true)
+      navigate('/favorites')
     } catch {
       setError('Login failed. Please check your credentials.')
     } finally {

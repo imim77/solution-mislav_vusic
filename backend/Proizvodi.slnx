@@ -2,5 +2,6 @@
   <Folder Name="/src/" />
   <Folder Name="/tests/" />
   <Project Path="src/Proizvodi.Api/Proizvodi.Api.csproj" />
+  <Project Path="tests/Proizvodi.IntegrationTests/Proizvodi.IntegrationTests.csproj" />
   <Project Path="tests/Proizvodi.UnitTests/Proizvodi.UnitTests.csproj" />
 </Solution>

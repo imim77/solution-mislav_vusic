@@ -20,3 +20,5 @@ app.MapProizvodiEndpoints();
 app.MigrateDd();
 
 app.Run();
+
+public partial class Program;

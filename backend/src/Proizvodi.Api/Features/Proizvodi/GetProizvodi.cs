@@ -24,7 +24,7 @@ public static class GetProizvodi
             throw new AppException.NotFoundException("Product", id);
         }
         response.EnsureSuccessStatusCode();
-        var proizvod = await response.Content.ReadFromJsonAsync<ProizvodiDto>();
+        var proizvod = await response.Content.ReadFromJsonAsync<ProductDetailsDto>();
         return Results.Ok(proizvod);
     }
     public static async Task<IResult> GetProizvodByTextInput(IHttpClientFactory factory, string? q)

@@ -1,5 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 /* Korišten GPT 5.5 u OpenCode harnessu sa Anthropic frontend-design skillom.
 /* AI PROMPT: You are an expert in UI design. My goal is to have a very nicely designed website and i need your help. Modify
 the index.css file with new styles. Use your /frontend-design skill. DO NOT MODIFY ANY FILE APART FROM index.css!!!
@@ -36,10 +51,18 @@ the index.css file with new styles. Use your /frontend-design skill. DO NOT MODI
   --color-accent-800: #561515;
 
   /* Type system: a grotesque sign face + a humanist shelf face + mono numerals */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body:   "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:   "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --radius-sm:   0.5rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1rem;
+  --radius-xl:   1.25rem;
+  --radius-2xl:  1.5rem;
+  --radius-3xl:  2rem;
+  --radius-full: 9999px;
 }
 
 /* ----------------------------------------------------------------------------
@@ -91,7 +114,7 @@ the index.css file with new styles. Use your /frontend-design skill. DO NOT MODI
   :focus-visible {
     outline: 2px solid var(--color-accent-700);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 0.75rem;
   }
 
   ::selection {

@@ -12,9 +12,9 @@ function ProductReviews({ reviews }: ProductReviewsProps) {
     <div>
       <h2 className="mb-4 font-display text-2xl font-bold tracking-tight">Reviews</h2>
       <div className="flex flex-col gap-4">
-        {reviews.map((review) => (
+        {reviews.map((review, index) => (
           <div
-            key={`${review.reviewerName}-${review.date}`}
+            key={`${review.reviewerName}-${review.date}-${index}`}
             className="rounded-lg bg-greyscale-200 p-4"
           >
             <div className="mb-2 flex items-center justify-between">

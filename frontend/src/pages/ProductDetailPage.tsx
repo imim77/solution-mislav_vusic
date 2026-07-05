@@ -1,20 +1,45 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { client } from '../Client'
 import Navbar from '../components/Navbar'
 import ProductImageGallery from '../components/ProductImageGallery'
 import ProductInfo from '../components/ProductInfo'
 import ProductReviews from '../components/ProductReviews'
+import { isAuthenticated } from '../utils/auth'
 
 function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
   const productId = Number(id)
   const isValidId = Number.isFinite(productId) && productId > 0
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => client.getProductById(productId),
     enabled: isValidId,
+  })
+
+  const addFavoriteMutation = useMutation({
+    mutationFn: () => {
+      if (!product) throw new Error('Product not loaded')
+      return client.addFavorite(
+        product.id,
+        product.title,
+        product.price,
+        product.description,
+        product.images[0] || ''
+      )
+    },
+    onSuccess: () => {
+      setSuccessMessage('Added to favorites!')
+      setErrorMessage(null)
+    },
+    onError: () => {
+      setErrorMessage('Failed to add to favorites.')
+      setSuccessMessage(null)
+    },
   })
 
   return (
@@ -46,6 +71,25 @@ function ProductDetailPage() {
               <ProductImageGallery images={product.images} title={product.title} />
               <ProductInfo product={product} />
             </div>
+
+            {isAuthenticated() && (
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => addFavoriteMutation.mutate()}
+                  disabled={addFavoriteMutation.isPending}
+                  className="rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white disabled:opacity-50"
+                >
+                  {addFavoriteMutation.isPending ? 'Adding...' : 'Add to favorites'}
+                </button>
+                {successMessage && (
+                  <p className="text-sm text-greyscale-600">{successMessage}</p>
+                )}
+                {errorMessage && (
+                  <p className="text-sm text-accent-700">{errorMessage}</p>
+                )}
+              </div>
+            )}
 
             <ProductReviews reviews={product.reviews} />
           </div>

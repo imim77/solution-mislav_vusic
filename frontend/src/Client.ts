@@ -74,7 +74,33 @@ export class  Client
         if (data.accessToken) {
             localStorage.setItem('accessToken', data.accessToken);
         }
+        if (data.id != null) {
+            localStorage.setItem('userId', String(data.id));
+        }
         return data;
+    }
+
+    async addFavorite(productId: number, title: string, price: number, description: string, thumbnail: string){
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            throw new Error('User not authenticated');
+        }
+        const response = await fetch(`${this.baseUrl}/proizvodi/favorites`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: Number(userId),
+                productId,
+                title,
+                price,
+                description,
+                thumbnail,
+            }),
+        });
+        if(!response.ok){
+            throw new Error("Problem with response");
+        }
+        return response.json();
     }
 
     private async fetchData(url: string){

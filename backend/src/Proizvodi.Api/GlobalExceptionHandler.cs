@@ -1,16 +1,16 @@
-using System.Diagnostics;
-using System.Net.Http;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Proizvodi.Api;
 
-
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger,IProblemDetailsService problemDetailsService) : IExceptionHandler
+public sealed class GlobalExceptionHandler(
+    ILogger<GlobalExceptionHandler> logger,
+    IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Unhandled exception occurred. TraceId: {TraceId}",httpContext.TraceIdentifier);
+        logger.LogError(exception, "Unhandled exception occurred. TraceId: {TraceId}", httpContext.TraceIdentifier);
+
         var (statusCode, title) = MapException(exception);
         httpContext.Response.StatusCode = statusCode;
 
@@ -36,15 +36,18 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger,IProb
     };
 
 
-    private static string GetProblemType(int statusCode) => statusCode switch
+    private static string GetProblemType(int statusCode)
     {
-        400 => "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-        401 => "https://tools.ietf.org/html/rfc9110#section-15.5.2",
-        403 => "https://tools.ietf.org/html/rfc9110#section-15.5.4",
-        404 => "https://tools.ietf.org/html/rfc9110#section-15.5.5",
-        409 => "https://tools.ietf.org/html/rfc9110#section-15.5.10",
-        _ => "https://tools.ietf.org/html/rfc9110#section-15.6.1"
-    };
+        return statusCode switch
+        {
+            400 => "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+            401 => "https://tools.ietf.org/html/rfc9110#section-15.5.2",
+            403 => "https://tools.ietf.org/html/rfc9110#section-15.5.4",
+            404 => "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+            409 => "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+            _ => "https://tools.ietf.org/html/rfc9110#section-15.6.1"
+        };
+    }
 
     private static string? GetSafeErrorMessage(Exception exception)
     {

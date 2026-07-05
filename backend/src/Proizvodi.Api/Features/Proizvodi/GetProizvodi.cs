@@ -132,4 +132,26 @@ public static class GetProizvodi
         return Results.Created($"/proizvodi/{request.ProductId}", favorite);
     }
 
+    public static async Task<IResult> GetUserFavorites(int id, ProizvodiContext dbContext)
+    {
+        var userExists = await dbContext.Users.AnyAsync(u => u.Id == id);
+        if (!userExists)
+        {
+            return Results.NotFound($"User with Id {id} not found.");
+        }
+
+        var favorites = await dbContext.UserFavorites
+            .Where(uf => uf.UserId == id)
+            .Select(uf => new ProizvodiDto(
+                uf.Product.Id,
+                uf.Product.Title,
+                uf.Product.Price,
+                uf.Product.Description,
+                uf.Product.Thumbnail
+            ))
+            .ToListAsync();
+
+        return Results.Ok(favorites);
+    }
+
 }

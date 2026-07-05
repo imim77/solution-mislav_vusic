@@ -6,12 +6,12 @@ import FavoritesPage from "./pages/FavoritesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
-  { 
-    path: "/", 
-    element: <App /> 
+  {
+    path: "/",
+    element: <App />
   },
   {
-    path: "/proizvodi/:id",
+    path: "/products/:id",
     element: <ProductDetailPage />
   },
   {

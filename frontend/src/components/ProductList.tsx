@@ -13,7 +13,7 @@ export default function ProductCard({products}: ProductListProps) {
       {products.map((product) => (
         <Link
           key={`${product.title}-${product.thumbnail}`}
-          to={`/proizvodi/${product.id}`}
+          to={`/products/${product.id}`}
           className="flex flex-col overflow-hidden rounded-lg bg-greyscale-200"
         >
           <div className="aspect-square bg-greyscale-100">

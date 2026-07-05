@@ -8,6 +8,12 @@
 - [Node.js 20+](https://nodejs.org/)
 - [Docker](https://www.docker.com/) (opcionalno)
 
+### Kloniranje repozitorija
+
+```bash
+git clone https://github.com/imim77/solution-mislav_vusic.git
+```
+
 ### Backend
 
 ```bash
@@ -58,7 +64,8 @@ dotnet test
 
 ```bash
 cd frontend
-npm test
+npm run test
+npm run test:ui 
 ```
 
 ### Korištenje AI alata

@@ -8,8 +8,7 @@ import Pagination from './components/Pagination'
 import { getPageItems, getTotalPages, getVisibleRange } from './utils/pagination'
 import { useQuery } from '@tanstack/react-query'
 import { productsQueryOptions } from './hooks/productsQueryOptions'
-
-const PAGE_SIZE = 8
+import { PAGE_SIZE } from './constants'
 
 function App() {
   const [page, setPage] = useState(1)

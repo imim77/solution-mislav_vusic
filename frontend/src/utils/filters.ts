@@ -1,11 +1,5 @@
 import type { ProductFilters } from "../components/ProductListFilters";
-
-const EMPTY_FILTERS: ProductFilters = {
-  search: "",
-  slug: "",
-  minPrice: null,
-  maxPrice: null,
-};
+import { EMPTY_FILTERS } from "../constants";
 
 const parsePrice = (value: string | null): number | null => {
   if (value === null || value.trim() === "") return null;

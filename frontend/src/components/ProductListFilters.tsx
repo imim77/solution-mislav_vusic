@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Client } from "../Client";
 import {useDebounce} from "../hooks/useDebounce";
+import { INPUT_CLASS } from "../constants";
 
 export type ProductFilters = {
   search: string;
@@ -17,7 +18,7 @@ type ProductListFiltersProps = {
 
 const client = new Client();
 
-const inputClass = "rounded-lg border border-greyscale-300 bg-greyscale-700 px-4 py-3 text-sm text-greyscale-900 placeholder:text-greyscale-500"
+const inputClass = INPUT_CLASS
 
 function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>(initialFilters.search);

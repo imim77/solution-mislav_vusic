@@ -12,13 +12,13 @@ function Navbar() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-0 z-20 border-b border-greyscale-300 bg-greyscale-50/90 backdrop-blur"
+      className="sticky top-0 z-20 border-b border-greyscale-300 bg-greyscale-50"
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className="font-display text-2xl font-bold tracking-tight text-greyscale-900"
+          className="font-display text-xl font-bold tracking-tight text-greyscale-900 sm:text-2xl"
         >
           Products
         </Link>
@@ -29,10 +29,10 @@ function Navbar() {
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `text-sm font-medium transition-colors ${
+                  `text-sm font-medium ${
                     isActive
                       ? 'text-accent-700'
-                      : 'text-greyscale-600 hover:text-greyscale-900'
+                      : 'text-greyscale-500 hover:text-greyscale-900'
                   }`
                 }
               >
@@ -50,12 +50,18 @@ function Navbar() {
           onClick={() => setOpen((prev) => !prev)}
           className="flex h-10 w-10 items-center justify-center rounded-md border border-greyscale-300 text-greyscale-800 sm:hidden"
         >
-          <span className="sr-only">Menu</span>
-          <div className="flex flex-col justify-between gap-1.5">
-            <span className={`h-0.5 w-5 bg-current transition-transform ${open ? 'translate-y-2 rotate-45' : ''}`} />
-            <span className={`h-0.5 w-5 bg-current transition-opacity ${open ? 'opacity-0' : ''}`} />
-            <span className={`h-0.5 w-5 bg-current transition-transform ${open ? '-translate-y-2 -rotate-45' : ''}`} />
-          </div>
+          {open ? (
+            <div className="relative h-5 w-5">
+              <span className="absolute top-1/2 left-0 h-0.5 w-5 -translate-y-1/2 rotate-45 bg-current" />
+              <span className="absolute top-1/2 left-0 h-0.5 w-5 -translate-y-1/2 -rotate-45 bg-current" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              <span className="h-0.5 w-5 bg-current" />
+              <span className="h-0.5 w-5 bg-current" />
+              <span className="h-0.5 w-5 bg-current" />
+            </div>
+          )}
         </button>
       </div>
 
@@ -70,10 +76,10 @@ function Navbar() {
                 to={link.to}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `block rounded-md px-3 py-2 text-sm font-medium ${
+                  `block rounded-md px-3 py-2.5 text-sm font-medium ${
                     isActive
-                      ? 'bg-greyscale-700 text-accent-700'
-                      : 'text-greyscale-700 hover:bg-greyscale-200'
+                      ? 'bg-greyscale-200 text-accent-700'
+                      : 'text-greyscale-600 hover:bg-greyscale-100'
                   }`
                 }
               >

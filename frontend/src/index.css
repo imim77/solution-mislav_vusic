@@ -72,7 +72,6 @@ the index.css file with new styles. Use your /frontend-design skill. DO NOT MODI
   a {
     color: inherit;
     text-decoration: none;
-    transition: color .18s ease;
   }
   a:hover {
     color: var(--color-accent-700);
@@ -120,39 +119,22 @@ the index.css file with new styles. Use your /frontend-design skill. DO NOT MODI
    own utilities (cascade layers: base < utilities). Kept surgical.
 ---------------------------------------------------------------------------- */
 @layer utilities {
-  /* Cards: keep the #f3f3f3 paper, but float it off the concrete floor with a
-     hairline edge + a soft, near-zero shadow. Low-opacity so it reads as light. */
-  .bg-greyscale-700 {
+  .bg-greyscale-200 {
     box-shadow:
       0 1px 0 0 rgb(20 20 26 / .04),
       0 8px 24px -18px rgb(20 20 26 / .18);
   }
 
-  /* Active pagination pill: the one place the accent earns a solid fill —
-     the "current shelf" marker on the awning. */
   nav button[aria-current="page"] {
     background-color: var(--color-accent-700);
     color: #fff;
     border-color: transparent;
   }
 
-  /* Chosen price / page numerics (page buttons, the showing-range line) */
-  nav button,
-  nav + p,
-  p[class*="opacity-"] {
+  nav button {
     font-family: var(--font-mono);
   }
 
-  /* Product price stays mono but leads with the accent so the dollar reads
-     first — the price tag is the atomic unit of a storefront. */
-  .bg-greyscale-700 .flex > p:last-child {
-    font-family: var(--font-mono);
-    font-weight: 600;
-    color: var(--color-accent-700);
-  }
-
-  /* The "Home / Favorites" links in the navbar act as wayfinding tabs */
-  a[class*=""],
   nav a {
     letter-spacing: 0.01em;
   }

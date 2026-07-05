@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from './components/ProductList'
-import { Client } from './Client'
 import ProductListFilters, { type ProductFilters } from './components/ProductListFilters'
 import Navbar from './components/Navbar'
 import { paramsToFilters, filtersToParams } from './utils/filters'
@@ -30,32 +29,45 @@ function App() {
   }, [setSearchParams])
 
   return (
-    <div className='flex flex-col gap-4'>
-      <Navbar/>
-      <ProductListFilters
-        key={searchParams.toString()}
-        initialFilters={filters}
-        onChange={handleFiltersChange}
-      />
-      {productsQuery.isLoading && (
-        <p className="text-sm opacity-70">Loading products...</p>
-      )}
-      {productsQuery.isError && (
-        <p className="text-sm text-red-500">Unable to load products.</p>
-      )}
-      {!productsQuery.isLoading && products.length > 0 && (
-        <p className="text-sm opacity-70">
-          Showing {visibleRange.from}-{visibleRange.to} of {products.length} products
-        </p>
-      )}
-      {!productsQuery.isError && <ProductCard products={visibleProducts} />}
-      {!productsQuery.isError && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      )}
+    <div className="min-h-screen bg-greyscale-50">
+      <Navbar />
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-8">
+          <ProductListFilters
+            key={searchParams.toString()}
+            initialFilters={filters}
+            onChange={handleFiltersChange}
+          />
+
+          {productsQuery.isLoading && (
+            <p className="font-mono text-sm text-greyscale-500">Loading products...</p>
+          )}
+
+          {productsQuery.isError && (
+            <p className="text-sm text-accent-700">Unable to load products.</p>
+          )}
+
+          {!productsQuery.isLoading && products.length > 0 && (
+            <p className="font-mono text-sm text-greyscale-500">
+              Showing {visibleRange.from}–{visibleRange.to} of {products.length} products
+            </p>
+          )}
+
+          {!productsQuery.isLoading && !productsQuery.isError && products.length === 0 && (
+            <p className="font-mono text-sm text-greyscale-500">No products found.</p>
+          )}
+
+          {!productsQuery.isError && <ProductCard products={visibleProducts} />}
+
+          {!productsQuery.isError && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </div>
+      </main>
     </div>
   )
 }

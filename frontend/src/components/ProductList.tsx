@@ -4,24 +4,36 @@ type ProductListProps = {
     products: Product[];
 }
 
-
 export default function ProductCard({products}: ProductListProps) {
+  if (products.length === 0) return null
+
   return (
-    <div className='flex flex-row flex-wrap gap-4'>
-    {products.map((product) => (
-      <div className='flex w-[250px] flex-col gap-4 rounded-lg bg-greyscale-700 p-4'
-        key={`${product.title}-${product.thumbnail}`}
-      >
-        <img src={product.thumbnail} alt={product.title} className='rounded-md' />
-        <div className='flex flex-row justify-between'> 
-          <div>
-            <h2 className='text-xl font-bold'>{product.title}</h2>
-            <p className='opacity-50'>{product.description}</p>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {products.map((product) => (
+        <div
+          key={`${product.title}-${product.thumbnail}`}
+          className="flex flex-col overflow-hidden rounded-lg bg-greyscale-200"
+        >
+          <div className="aspect-square bg-greyscale-100">
+            <img
+              src={product.thumbnail}
+              alt={product.title}
+              className="h-full w-full object-cover"
+            />
           </div>
-          <p>${product.price}</p>
-        </div> 
-      </div>
-    ))}
+          <div className="flex flex-1 flex-col gap-2 p-4">
+            <h2 className="font-display text-base font-semibold leading-snug line-clamp-1">
+              {product.title}
+            </h2>
+            <p className="text-sm leading-relaxed text-greyscale-500 line-clamp-2">
+              {product.description}
+            </p>
+            <p className="mt-auto font-mono text-lg font-bold text-accent-700">
+              ${product.price}
+            </p>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

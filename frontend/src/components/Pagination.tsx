@@ -12,7 +12,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
   return (
     <nav
       aria-label="Product pages"
-      className="flex flex-wrap items-center justify-center gap-2"
+      className="flex flex-wrap items-center justify-center gap-2 pt-4"
     >
       {pages.map((page) => (
         <button
@@ -22,8 +22,8 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
           aria-current={page === currentPage ? "page" : undefined}
           className={`min-w-10 rounded-md border px-3 py-2 text-sm ${
             page === currentPage
-              ? "border-transparent bg-greyscale-700 font-semibold"
-              : "border-greyscale-700"
+              ? "border-transparent font-semibold"
+              : "border-greyscale-300 bg-greyscale-50 text-greyscale-600 hover:border-greyscale-400"
           }`}
         >
           {page}

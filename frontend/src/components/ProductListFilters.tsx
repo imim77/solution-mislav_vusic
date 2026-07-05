@@ -17,6 +17,8 @@ type ProductListFiltersProps = {
 
 const client = new Client();
 
+const inputClass = "rounded-lg border border-greyscale-300 bg-greyscale-700 px-4 py-3 text-sm text-greyscale-900 placeholder:text-greyscale-500"
+
 function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps) {
   const [search, setSearch] = useState<ProductFilters['search']>(initialFilters.search);
   const debouncedSearch = useDebounce(search);
@@ -42,37 +44,46 @@ function ProductListFilters({initialFilters, onChange}: ProductListFiltersProps)
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:flex-row">
-        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products"
-          className="min-w-[150px] flex-1 rounded-md bg-greyscale-700 p-4" />
-        <select value={category} onChange={(e) => setCategory(e.target.value as ProductFilters['slug'])}
-          className="min-w-[150px] flex-1 rounded-md bg-greyscale-700 p-4">
-            <option value="">All categories</option>
-            {categoriesQuery.isError && (
-                <option value="" disabled>Unable to load categories</option>
-            )}
-            {categories.map((c) => (
-                <option key={c.slug} value={c.slug}>{c.name}</option>
-            ))}
+    <div className="flex flex-col gap-4">
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search products"
+        className={`${inputClass} w-full px-5 py-3.5 text-base`}
+      />
+      <div className="flex flex-wrap gap-3">
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value as ProductFilters['slug'])}
+          className={`${inputClass} min-w-[160px] flex-1`}
+        >
+          <option value="">All categories</option>
+          {categoriesQuery.isError && (
+            <option value="" disabled>Unable to load categories</option>
+          )}
+          {categories.map((c) => (
+            <option key={c.slug} value={c.slug}>{c.name}</option>
+          ))}
         </select>
         <input
-            type="number"
-            min={0}
-            value={minPrice ?? ''}
-            onChange={(e) => setMinPrice(parsePrice(e.target.value))}
-            placeholder="Min price"
-            className="min-w-[120px] flex-1 rounded-lg bg-greyscale-700 p-4"
+          type="number"
+          min={0}
+          value={minPrice ?? ''}
+          onChange={(e) => setMinPrice(parsePrice(e.target.value))}
+          placeholder="Min price"
+          className={`${inputClass} w-32 flex-1 sm:flex-none`}
         />
         <input
-            type="number"
-            min={0}
-            value={maxPrice ?? ''}
-            onChange={(e) => setMaxPrice(parsePrice(e.target.value))}
-            placeholder="Max price"
-            className="min-w-[120px] flex-1 rounded-lg bg-greyscale-700 p-4"
+          type="number"
+          min={0}
+          value={maxPrice ?? ''}
+          onChange={(e) => setMaxPrice(parsePrice(e.target.value))}
+          placeholder="Max price"
+          className={`${inputClass} w-32 flex-1 sm:flex-none`}
         />
+      </div>
     </div>
-
   )
 }
 

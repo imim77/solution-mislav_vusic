@@ -129,7 +129,14 @@ public static class GetProizvodi
         dbContext.UserFavorites.Add(favorite);
         await dbContext.SaveChangesAsync();
 
-        return Results.Created($"/proizvodi/{request.ProductId}", favorite);
+        var result = new ProizvodiDto(
+            product.Id,
+            product.Title,
+            product.Price,
+            product.Description,
+            product.Thumbnail);
+
+        return Results.Created($"/proizvodi/{request.ProductId}", result);
     }
 
     public static async Task<IResult> GetUserFavorites(int id, ProizvodiContext dbContext)

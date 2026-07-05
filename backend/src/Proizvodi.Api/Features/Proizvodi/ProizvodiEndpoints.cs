@@ -10,7 +10,7 @@ public static class ProizvodiEndpoints
         app.MapGet("/proizvodi/search", GetProizvodi.GetProizvodByTextInput);
         app.MapGet("/proizvodi/{id:int}", GetProizvodi.GetProizvodAsync);
         app.MapGet("/proizvodi/categories", GetCategories.GetCategoriesAsync);
-        app.MapGet("/proizvodi/categories/{slug}", GetCategories.GetCategoyItems);
+        app.MapGet("/proizvodi/categories/{slug}", GetCategories.GetCategoryItems);
         app.MapPost("/proizvodi/login", GetProizvodi.PostUserCredentials);
         app.MapPost("/proizvodi/favorites", GetProizvodi.PostProductFavorite);
         app.MapGet("/proizvodi/favorites/{id:int}", GetProizvodi.GetUserFavorites);

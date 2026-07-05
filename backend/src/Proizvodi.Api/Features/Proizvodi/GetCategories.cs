@@ -1,4 +1,5 @@
 using Proizvodi.Api.Features.Proizvodi;
+using System.Net;
 
 namespace Proizvodi.Api.Features.Categories;
 
@@ -12,20 +13,29 @@ public class GetCategories
         var proizvodi = await response.Content.ReadFromJsonAsync<List<CategoriesDto>>();
         return Results.Ok(proizvodi);
     }
-    public static async Task<IResult> GetCategoyItems(IHttpClientFactory factory, string slug, decimal? minPrice, decimal? maxPrice)
+    public static async Task<IResult> GetCategoryItems(IHttpClientFactory factory, string slug, decimal? minPrice, decimal? maxPrice)
     {
         var http = factory.CreateClient("nesto");
         var response = await http.GetAsync($"/products/category/{slug}");
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new AppException.NotFoundException("Category", slug);
+        }
+
         response.EnsureSuccessStatusCode();
         var data = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
 
         var products = data?.Products ?? [];
 
         if (minPrice.HasValue)
-        products = products.Where(p => p.Price >= minPrice.Value).ToList();
+        {
+            products = products.Where(p => p.Price >= minPrice.Value).ToList();
+        }
 
         if (maxPrice.HasValue)
-        products = products.Where(p => p.Price <= maxPrice.Value).ToList();
+        {
+            products = products.Where(p => p.Price <= maxPrice.Value).ToList();
+        }
 
         return Results.Ok(products);
  

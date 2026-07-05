@@ -1,4 +1,4 @@
-import type { Product } from './models/Products'
+import type { Product, ProductDetails } from './models/Products'
 import type { Categories } from './models/Categories'
 
 export class  Client
@@ -46,6 +46,31 @@ export class  Client
         }
         const data: Product[] = await response.json();
         return data ?? [];
+    }
+
+    async getProductById(id: number){
+        const response = await this.fetchData(`${this.baseUrl}/proizvodi/${id}`);
+        if(!response.ok){
+            throw new Error("Problem with response");
+        }
+        const data: ProductDetails = await response.json();
+        return data;
+    }
+
+    async login(username: string, password: string, expiresInMins?: number){
+        const response = await fetch(`${this.baseUrl}/proizvodi/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username,
+                password,
+                ...(expiresInMins != null && { expiresInMins }),
+            }),
+        });
+        if(!response.ok){
+            throw new Error("Problem with response");
+        }
+        return response.json();
     }
 
     private async fetchData(url: string){

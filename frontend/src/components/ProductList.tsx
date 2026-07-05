@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type {Product} from '../models/Products'
 
 type ProductListProps = {
@@ -10,8 +11,9 @@ export default function ProductCard({products}: ProductListProps) {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((product) => (
-        <div
+        <Link
           key={`${product.title}-${product.thumbnail}`}
+          to={`/proizvodi/${product.id}`}
           className="flex flex-col overflow-hidden rounded-lg bg-greyscale-200"
         >
           <div className="aspect-square bg-greyscale-100">
@@ -32,7 +34,7 @@ export default function ProductCard({products}: ProductListProps) {
               ${product.price}
             </p>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   )

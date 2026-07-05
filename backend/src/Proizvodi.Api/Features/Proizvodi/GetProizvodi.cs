@@ -79,7 +79,57 @@ public static class GetProizvodi
 
         await dbContext.SaveChangesAsync();
 
-        return Results.Ok(login);
+        var result = new LoginResult(
+            login.Id,
+            login.Username,
+            login.FirstName,
+            login.LastName,
+            login.AccessToken
+        );
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> PostProductFavorite(AddFavoriteRequest request, ProizvodiContext dbContext)
+    {
+        var userExists = await dbContext.Users.AnyAsync(u => u.Id == request.UserId);
+        if (!userExists)
+        {
+            return Results.NotFound($"User with Id {request.UserId} not found.");
+        }
+
+        var product = await dbContext.Products.FindAsync(request.ProductId);
+        if (product is null)
+        {
+            product = new Product
+            {
+                Id = request.ProductId,
+                Title = request.Title,
+                Price = request.Price,
+                Description = request.Description,
+                Thumbnail = request.Thumbnail
+            };
+            dbContext.Products.Add(product);
+        }
+
+        var alreadyFavorite = await dbContext.UserFavorites
+            .AnyAsync(uf => uf.UserId == request.UserId && uf.ProductId == request.ProductId);
+
+        if (alreadyFavorite)
+        {
+            return Results.Conflict("Product is already in favorites.");
+        }
+
+        var favorite = new UserFavorite
+        {
+            UserId = request.UserId,
+            ProductId = request.ProductId
+        };
+
+        dbContext.UserFavorites.Add(favorite);
+        await dbContext.SaveChangesAsync();
+
+        return Results.Created($"/proizvodi/{request.ProductId}", favorite);
     }
 
 }

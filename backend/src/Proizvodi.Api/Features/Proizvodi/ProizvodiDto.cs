@@ -27,6 +27,7 @@ public record ProductDetailsDto(
     [Required] double Rating,
     [Required] int Stock,
     [Required] string AvailabilityStatus, 
+    [Required] string Thumbnail,
     [Required] List<string> Images,
     [Required] List<string> Tags,
     List<ProductReviewDto> Reviews
@@ -54,4 +55,21 @@ public record LoginResponse(
     string Image,
     string AccessToken,
     string RefreshToken
+);
+
+public record LoginResult(
+    int Id,
+    string Username,
+    string FirstName,
+    string LastName,
+    string AccessToken
+);
+
+public record AddFavoriteRequest(
+    int UserId,
+    int ProductId,
+    string Title,
+    decimal Price,
+    string Description,
+    string Thumbnail
 );

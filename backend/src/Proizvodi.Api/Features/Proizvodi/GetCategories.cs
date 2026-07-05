@@ -1,43 +1,33 @@
 using Proizvodi.Api.Features.Proizvodi;
-using System.Net;
 
 namespace Proizvodi.Api.Features.Categories;
 
-public class GetCategories
+public static class GetCategories
 {
-    public static async Task<IResult> GetCategoriesAsync(IHttpClientFactory factory)
+    public static async Task<IResult> GetCategoriesAsync(IProductSource productSource)
     {
-        var http = factory.CreateClient("nesto");
-        var response = await http.GetAsync("/products/categories");
-        response.EnsureSuccessStatusCode();
-        var proizvodi = await response.Content.ReadFromJsonAsync<List<CategoriesDto>>();
-        return Results.Ok(proizvodi);
+        var categories = await productSource.GetCategoriesAsync();
+        return Results.Ok(categories);
     }
-    public static async Task<IResult> GetCategoryItems(IHttpClientFactory factory, string slug, decimal? minPrice, decimal? maxPrice)
+
+    public static async Task<IResult> GetCategoryItems(
+        IProductSource productSource,
+        string slug,
+        decimal? minPrice,
+        decimal? maxPrice)
     {
-        var http = factory.CreateClient("nesto");
-        var response = await http.GetAsync($"/products/category/{slug}");
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new AppException.NotFoundException("Category", slug);
-        }
-
-        response.EnsureSuccessStatusCode();
-        var data = await response.Content.ReadFromJsonAsync<ProizvodiResponse>();
-
-        var products = data?.Products ?? [];
+        var products = (await productSource.GetCategoryProductsAsync(slug)).AsEnumerable();
 
         if (minPrice.HasValue)
         {
-            products = products.Where(p => p.Price >= minPrice.Value).ToList();
+            products = products.Where(p => p.Price >= minPrice.Value);
         }
 
         if (maxPrice.HasValue)
         {
-            products = products.Where(p => p.Price <= maxPrice.Value).ToList();
+            products = products.Where(p => p.Price <= maxPrice.Value);
         }
 
-        return Results.Ok(products);
- 
+        return Results.Ok(products.ToList());
     }
 }

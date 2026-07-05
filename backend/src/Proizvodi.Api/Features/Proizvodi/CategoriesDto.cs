@@ -4,5 +4,5 @@ namespace Proizvodi.Api.Features.Categories;
 
 public record CategoriesDto(
     [Required] string Name,
-    [Required] string Slug 
+    [Required] string Slug
 );

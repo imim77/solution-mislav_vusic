@@ -11,13 +11,13 @@ using Proizvodi.Api.Models;
 
 namespace Proizvodi.UnitTests;
 
-public class GetProizvodiTests
+public class ProizvodiEndpointHandlerTests
 {
     [Fact]
     public async Task SearchProizvodi_WithoutQuery_ReturnsBadRequest()
     {
-        var result = await GetProizvodi.GetProizvodByTextInput(
-            new TestHttpClientFactory("{}"),
+        var result = await ProizvodiEndpoints.GetProizvodByTextInput(
+            new TestProductSource(),
             q: " ");
 
         var badRequest = Assert.IsType<BadRequest<string>>(result);
@@ -27,10 +27,13 @@ public class GetProizvodiTests
     [Fact]
     public async Task GetProizvod_WhenUpstreamReturnsNotFound_ThrowsNotFoundException()
     {
-        var factory = new TestHttpClientFactory("{}", HttpStatusCode.NotFound);
+        var productSource = new TestProductSource
+        {
+            ProductException = new AppException.NotFoundException("Product", 123)
+        };
 
         var exception = await Assert.ThrowsAsync<AppException.NotFoundException>(
-            () => GetProizvodi.GetProizvodAsync(factory, 123));
+            () => ProizvodiEndpoints.GetProizvodAsync(productSource, 123));
 
         Assert.Equal("Product with identifier '123' was not found.", exception.Message);
     }
@@ -52,7 +55,7 @@ public class GetProizvodiTests
             }
             """);
 
-        var result = await GetProizvodi.PostUserCredentials(
+        var result = await ProizvodiEndpoints.PostUserCredentials(
             factory,
             new LoginRequest("mislav", "password", null),
             db);
@@ -72,7 +75,7 @@ public class GetProizvodiTests
     {
         await using var db = CreateDbContext();
 
-        var result = await GetProizvodi.PostProductFavorite(CreateFavoriteRequest(), db);
+        var result = await ProizvodiEndpoints.PostProductFavorite(CreateFavoriteRequest(), db);
 
         var notFound = Assert.IsType<NotFound<string>>(result);
         Assert.Equal("User with Id 7 not found.", notFound.Value);
@@ -87,7 +90,7 @@ public class GetProizvodiTests
         db.UserFavorites.Add(new UserFavorite { UserId = 7, ProductId = 15 });
         await db.SaveChangesAsync();
 
-        var result = await GetProizvodi.PostProductFavorite(CreateFavoriteRequest(), db);
+        var result = await ProizvodiEndpoints.PostProductFavorite(CreateFavoriteRequest(), db);
 
         var conflict = Assert.IsType<Conflict<string>>(result);
         Assert.Equal("Product is already in favorites.", conflict.Value);
@@ -100,7 +103,7 @@ public class GetProizvodiTests
         db.Users.Add(CreateUser());
         await db.SaveChangesAsync();
 
-        var result = await GetProizvodi.PostProductFavorite(CreateFavoriteRequest(), db);
+        var result = await ProizvodiEndpoints.PostProductFavorite(CreateFavoriteRequest(), db);
 
         var created = Assert.IsType<Created<ProizvodiDto>>(result);
         Assert.Equal("/proizvodi/15", created.Location);

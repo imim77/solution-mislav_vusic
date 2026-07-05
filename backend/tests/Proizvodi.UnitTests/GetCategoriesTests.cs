@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Proizvodi.Api;
 using Proizvodi.Api.Features.Categories;
@@ -11,39 +10,33 @@ public class GetCategoriesTests
     [Fact]
     public async Task GetCategoryItems_WithPriceBounds_ReturnsOnlyProductsInsideBounds()
     {
-        var factory = new TestHttpClientFactory("""
-            {
-              "products": [
-                {
-                  "id": 1,
-                  "title": "Cheap phone",
-                  "price": 99,
-                  "description": "Entry phone",
-                  "thumbnail": "https://example.test/cheap.png"
-                },
-                {
-                  "id": 2,
-                  "title": "Good phone",
-                  "price": 599,
-                  "description": "Daily phone",
-                  "thumbnail": "https://example.test/good.png"
-                },
-                {
-                  "id": 3,
-                  "title": "Premium phone",
-                  "price": 1299,
-                  "description": "Flagship phone",
-                  "thumbnail": "https://example.test/premium.png"
-                }
-              ],
-              "total": 3,
-              "skip": 0,
-              "limit": 30
-            }
-            """);
+        var productSource = new TestProductSource
+        {
+            CategoryProducts =
+            [
+                new ProizvodiDto(
+                    1,
+                    "Cheap phone",
+                    99,
+                    "Entry phone",
+                    "https://example.test/cheap.png"),
+                new ProizvodiDto(
+                    2,
+                    "Good phone",
+                    599,
+                    "Daily phone",
+                    "https://example.test/good.png"),
+                new ProizvodiDto(
+                    3,
+                    "Premium phone",
+                    1299,
+                    "Flagship phone",
+                    "https://example.test/premium.png")
+            ]
+        };
 
         var result = await GetCategories.GetCategoryItems(
-            factory,
+            productSource,
             slug: "smartphones",
             minPrice: 500,
             maxPrice: 900);
@@ -57,10 +50,13 @@ public class GetCategoriesTests
     [Fact]
     public async Task GetCategoryItems_WhenUpstreamReturnsNotFound_ThrowsNotFoundException()
     {
-        var factory = new TestHttpClientFactory("{}", HttpStatusCode.NotFound);
+        var productSource = new TestProductSource
+        {
+            CategoryException = new AppException.NotFoundException("Category", "unknown")
+        };
 
         var exception = await Assert.ThrowsAsync<AppException.NotFoundException>(
-            () => GetCategories.GetCategoryItems(factory, "unknown", null, null));
+            () => GetCategories.GetCategoryItems(productSource, "unknown", null, null));
 
         Assert.Equal("Category with identifier 'unknown' was not found.", exception.Message);
     }

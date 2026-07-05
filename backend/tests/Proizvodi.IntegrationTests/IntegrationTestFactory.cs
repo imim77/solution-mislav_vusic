@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Proizvodi.Api.Data;
+using Proizvodi.Api.Infrastructure;
 
 namespace Proizvodi.IntegrationTests;
 
@@ -29,7 +30,7 @@ public sealed class IntegrationTestFactory : WebApplicationFactory<Program>
             services.AddDbContext<ProizvodiContext>((sp, options) =>
                 options.UseSqlite(sp.GetRequiredService<SqliteConnection>()));
 
-            services.AddHttpClient("nesto")
+            services.AddHttpClient(DummyJsonClientExtensions.ClientName)
                 .ConfigurePrimaryHttpMessageHandler(_ => new DummyJsonHandler());
         });
     }

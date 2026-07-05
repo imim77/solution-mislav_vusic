@@ -10,6 +10,7 @@ public record ProizvodiResponse(
 );
 
 public record ProizvodiDto(
+    [Required] int Id,
     [Required] string Title,
     [Required] decimal Price,
     [Required][StringLength(100)] string Description,

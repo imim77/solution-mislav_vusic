@@ -103,6 +103,15 @@ export class  Client
         return response.json();
     }
 
+    async getFavorites(userId: number){
+        const response = await this.fetchData(`${this.baseUrl}/proizvodi/favorites/${userId}`);
+        if(!response.ok){
+            throw new Error("Problem with response");
+        }
+        const data: Product[] = await response.json();
+        return data ?? [];
+    }
+
     private async fetchData(url: string){
         try{
             const response = await fetch(url);

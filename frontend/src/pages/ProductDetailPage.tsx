@@ -29,7 +29,7 @@ function ProductDetailPage() {
         product.title,
         product.price,
         product.description,
-        product.images[0] || ''
+        product.thumbnail
       )
     },
     onSuccess: () => {

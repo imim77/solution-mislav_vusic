@@ -23,6 +23,7 @@ export interface ProductDetails {
   rating: number;
   stock: number;
   availabilityStatus: string;
+  thumbnail: string;
   images: string[];
   tags: string[];
   reviews: ProductReview[];

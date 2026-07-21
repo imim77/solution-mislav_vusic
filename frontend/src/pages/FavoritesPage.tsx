@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { client } from '../Client'
 import Navbar from '../components/Navbar'
-import ProductCard from '../components/ProductList'
+import ProductList from '../components/ProductList'
+import { getUserId } from '../utils/auth'
 
 function FavoritesPage() {
-  const userId = localStorage.getItem('userId')
-  const userIdNum = userId ? Number(userId) : null
+  const userId = getUserId()
 
   const { data: favorites, isLoading, isError } = useQuery({
-    queryKey: ['favorites', userIdNum],
-    queryFn: () => client.getFavorites(userIdNum!),
-    enabled: userIdNum != null,
+    queryKey: ['favorites', userId],
+    queryFn: () => client.getFavorites(userId!),
+    enabled: userId != null,
   })
 
   return (
@@ -34,7 +34,7 @@ function FavoritesPage() {
         )}
 
         {!isLoading && !isError && favorites && favorites.length > 0 && (
-          <ProductCard products={favorites} />
+          <ProductList products={favorites} />
         )}
       </main>
     </div>

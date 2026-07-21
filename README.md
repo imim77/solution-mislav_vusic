@@ -1,73 +1,85 @@
-# Abysalto akademija - zadatak
+# Proizvodi — Abysalto akademija
 
-## Postavljanje okruženja i instalacija
+Full-stack aplikacija za pregled proizvoda, pretragu, filtriranje i spremanje favorita. Podaci o proizvodima dolaze iz [DummyJSON](https://dummyjson.com) API-ja; korisnici i favoriti pohranjuju se lokalno u SQLite bazi.
 
-### Preduvjeti
+## Preduvjeti
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Node.js 20+](https://nodejs.org/)
 - [Docker](https://www.docker.com/) (opcionalno)
 
-### Kloniranje repozitorija
-
-```bash
-git clone https://github.com/imim77/solution-mislav_vusic.git
-```
-
-### Backend
-
-```bash
-cd backend
-dotnet restore
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-```
-
-## Konfiguracija
-
-
-### Frontend
-
-Frontend koristi Vite proxy za preusmjeravanje `/api` poziva na backend (`http://localhost:5188`). Konfiguracija se nalazi u `frontend/vite.config.ts`.
-
 ## Pokretanje
 
-
-### Docker Compose
+### Docker Compose (preporučeno)
 
 ```bash
 docker compose up --build
 ```
 
-- Backend: `http://localhost:5188`
-- Frontend: `http://localhost:8080`
+- Frontend: http://localhost:8080
+- Backend: http://localhost:5188
 
-### Login credentials
+### Lokalno
 
-Za username koristiti `emilys`, a za password `emilyspass`
-
-## Testovi
-
-### Backend
+**Backend**
 
 ```bash
 cd backend
-dotnet test
+dotnet restore
+dotnet run --project src/Proizvodi.Api
 ```
 
-### Frontend
+**Frontend** (u drugom terminalu)
 
 ```bash
 cd frontend
-npm run test
-npm run test:ui 
+npm install
+npm run dev
 ```
 
-### Korištenje AI alata
+Frontend dev server proxy-ira `/api` pozive na backend (`http://localhost:5188`).
 
-Tijekom razvoja aplikacije koristio sam GitHub Copilot s GPT-5.5 modelom putem AI automatskog dovršavanja koda (AI autocomplete). Alat mi je služio za bržu izradu boilerplate koda, osmišljavanje dodatnih testnih slučajeva te pomoć pri refaktoriranju određenih dijelova koda. AI je također korišten tijekom razvoja frontend dijela aplikacije. Na mjestima gdje je korišten AI ostavljeni su komentari u izvornom kodu koji navode korišteni model i odgovarajući prompt
+### Prijava
+
+| Polje    | Vrijednost   |
+| -------- | ------------ |
+| Username | `emilys`     |
+| Password | `emilyspass` |
+
+## Struktura projekta
+
+```
+backend/
+  src/Proizvodi.Api/     ASP.NET Core 10 Minimal API
+  tests/                 unit i integration testovi
+frontend/
+  src/                   React 19 + TypeScript
+```
+
+### Backend
+
+- **Vertical slice arhitektura** — endpointi i logika organizirani po featureima (`Features/Proizvodi`, `Features/Categories`)
+- **DummyJSON integracija** — proizvodi, kategorije i autentifikacija preko vanjskog API-ja
+- **SQLite + EF Core** — lokalna baza za korisnike i favorite; migracije se primjenjuju pri pokretanju
+- **Global exception handler** — konzistentni `ProblemDetails` odgovori
+
+### Frontend
+
+- **React 19, Vite, Tailwind CSS 4** — s React Compilerom
+- **TanStack Query** — dohvat i cache podataka
+- **React Router** — zaštićene rute za favorite (`/favorites`)
+- Stranice: lista proizvoda (pretraga, kategorija, cijena, paginacija), detalj proizvoda, favoriti, login
+
+## Testovi
+
+```bash
+# Backend
+cd backend && dotnet test
+
+# Frontend
+cd frontend && npm run test
+```
+
+## AI alati
+
+Tijekom razvoja korišten je GitHub Copilot (GPT-5.5) za autocomplete, testne slučajeve i refaktoriranje. Na relevantnim mjestima u kodu ostavljeni su komentari s modelom i promptom.

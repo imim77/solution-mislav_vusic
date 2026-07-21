@@ -13,15 +13,9 @@ public static class ProductMappingExtensions
             product.Description,
             product.Thumbnail);
 
-    public static ProizvodiDto ToDto(this Product product)
-    {
-        return new ProizvodiDto(
-            product.Id,
-            product.Title,
-            product.Price,
-            product.Description,
-            product.Thumbnail);
-    }
+    private static readonly Func<Product, ProizvodiDto> CompiledProjection = ToDtoProjection.Compile();
+
+    public static ProizvodiDto ToDto(this Product product) => CompiledProjection(product);
 
     public static Product ToProduct(this AddFavoriteRequest request)
     {

@@ -9,7 +9,8 @@ builder.Services.AddDummyJsonClient(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-var connectionString = builder.Configuration.GetConnectionString("Proizvodi") ?? "Data Source=Proizvodi.db";
+var connectionString = builder.Configuration.GetConnectionString("Proizvodi")
+    ?? throw new InvalidOperationException("Connection string 'Proizvodi' is not configured.");
 builder.Services.AddSqlite<ProizvodiContext>(connectionString);
 
 var app = builder.Build();

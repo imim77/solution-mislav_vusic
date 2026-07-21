@@ -4,9 +4,11 @@ namespace Proizvodi.Api.Features.Categories;
 
 public static class GetCategories
 {
-    public static async Task<IResult> GetCategoriesAsync(IProductSource productSource)
+    public static async Task<IResult> GetCategoriesAsync(
+        IProductSource productSource,
+        CancellationToken cancellationToken = default)
     {
-        var categories = await productSource.GetCategoriesAsync();
+        var categories = await productSource.GetCategoriesAsync(cancellationToken);
         return Results.Ok(categories);
     }
 
@@ -14,9 +16,10 @@ public static class GetCategories
         IProductSource productSource,
         string slug,
         decimal? minPrice,
-        decimal? maxPrice)
+        decimal? maxPrice,
+        CancellationToken cancellationToken = default)
     {
-        var products = (await productSource.GetCategoryProductsAsync(slug)).AsEnumerable();
+        var products = (await productSource.GetCategoryProductsAsync(slug, cancellationToken)).AsEnumerable();
 
         if (minPrice.HasValue)
         {

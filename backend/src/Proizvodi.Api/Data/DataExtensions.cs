@@ -10,10 +10,4 @@ public static class DataExtensions
         var dbContext = scope.ServiceProvider.GetRequiredService<ProizvodiContext>();
         dbContext.Database.Migrate();
     }
-
-    [Obsolete("Use MigrateDatabase instead.")]
-    public static void MigrateDd(this WebApplication app)
-    {
-        app.MigrateDatabase();
-    }
 }

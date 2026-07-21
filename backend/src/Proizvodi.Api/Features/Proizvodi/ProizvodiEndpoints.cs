@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Proizvodi.Api.Data;
@@ -29,19 +30,12 @@ public static class ProizvodiEndpoints
         int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
-        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
-        {
-            return Results.BadRequest(error);
-        }
-
-        if (paging is null)
-        {
-            var products = await productSource.GetProductsAsync(cancellationToken);
-            return Results.Ok(products);
-        }
-
-        var pagedProducts = await productSource.GetProductsPageAsync(paging, cancellationToken);
-        return Results.Ok(pagedProducts);
+        return await PaginateAsync(
+            page,
+            pageSize,
+            productSource.GetProductsAsync,
+            productSource.GetProductsPageAsync,
+            cancellationToken);
     }
 
     public static async Task<IResult> GetProizvodAsync(
@@ -65,19 +59,12 @@ public static class ProizvodiEndpoints
             return Results.BadRequest("Search term is required.");
         }
 
-        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
-        {
-            return Results.BadRequest(error);
-        }
-
-        if (paging is null)
-        {
-            var products = await productSource.SearchProductsAsync(q, cancellationToken);
-            return Results.Ok(products);
-        }
-
-        var pagedProducts = await productSource.SearchProductsPageAsync(q, paging, cancellationToken);
-        return Results.Ok(pagedProducts);
+        return await PaginateAsync(
+            page,
+            pageSize,
+            ct => productSource.SearchProductsAsync(q, ct),
+            (paging, ct) => productSource.SearchProductsPageAsync(q, paging, ct),
+            cancellationToken);
     }
 
     public static async Task<IResult> PostUserCredentials(
@@ -88,6 +75,12 @@ public static class ProizvodiEndpoints
     {
         var httpClient = httpClientFactory.CreateDummyJsonClient();
         var response = await httpClient.PostAsJsonAsync("/auth/login", request, cancellationToken);
+
+        if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.BadRequest)
+        {
+            return Results.Unauthorized();
+        }
+
         response.EnsureSuccessStatusCode();
         var login = await response.Content.ReadFromJsonAsync<LoginResponse>(cancellationToken);
         if (login is null)
@@ -163,6 +156,26 @@ public static class ProizvodiEndpoints
             .ToListAsync(cancellationToken);
 
         return Results.Ok(favorites);
+    }
+
+    private static async Task<IResult> PaginateAsync<T>(
+        int? page,
+        int? pageSize,
+        Func<CancellationToken, Task<IReadOnlyList<T>>> getAllAsync,
+        Func<PaginationParams, CancellationToken, Task<PagedResult<T>>> getPageAsync,
+        CancellationToken cancellationToken)
+    {
+        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
+        {
+            return Results.BadRequest(error);
+        }
+
+        if (paging is null)
+        {
+            return Results.Ok(await getAllAsync(cancellationToken));
+        }
+
+        return Results.Ok(await getPageAsync(paging, cancellationToken));
     }
 
     private static async Task<bool> UserExistsAsync(

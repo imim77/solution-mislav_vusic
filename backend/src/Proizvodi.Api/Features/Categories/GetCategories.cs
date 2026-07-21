@@ -21,24 +21,22 @@ public static class GetCategories
         int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
-        var products = (await productSource.GetCategoryProductsAsync(slug, cancellationToken)).AsEnumerable();
-
-        if (minPrice.HasValue)
+        if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)
         {
-            products = products.Where(p => p.Price >= minPrice.Value);
+            return Results.BadRequest("minPrice cannot be greater than maxPrice.");
         }
 
-        if (maxPrice.HasValue)
-        {
-            products = products.Where(p => p.Price <= maxPrice.Value);
-        }
+        var products = await productSource.GetCategoryProductsAsync(slug, cancellationToken);
+
+        var filteredProducts = products
+            .Where(p => minPrice is null || p.Price >= minPrice.Value)
+            .Where(p => maxPrice is null || p.Price <= maxPrice.Value)
+            .ToList();
 
         if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
         {
             return Results.BadRequest(error);
         }
-
-        var filteredProducts = products.ToList();
 
         if (paging is null)
         {

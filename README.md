@@ -1,4 +1,4 @@
-# Proizvodi — Abysalto akademija
+# Proizvodi
 
 Full-stack aplikacija za pregled proizvoda, pretragu, filtriranje i spremanje favorita. Podaci o proizvodima dolaze iz [DummyJSON](https://dummyjson.com) API-ja; korisnici i favoriti pohranjuju se lokalno u SQLite bazi.
 

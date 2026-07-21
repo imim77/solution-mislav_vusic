@@ -31,7 +31,7 @@ function Navbar() {
           onClick={() => setOpen(false)}
           className="font-display text-xl font-bold tracking-tight text-greyscale-900 sm:text-2xl"
         >
-          Abysalto akademija
+          Proizvodi
         </Link>
 
         <ul className="hidden items-center gap-8 sm:flex">

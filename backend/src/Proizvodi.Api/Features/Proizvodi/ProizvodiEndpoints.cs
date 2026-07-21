@@ -25,10 +25,23 @@ public static class ProizvodiEndpoints
 
     public static async Task<IResult> GetProizvodiAsync(
         IProductSource productSource,
+        int? page = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
-        var products = await productSource.GetProductsAsync(cancellationToken);
-        return Results.Ok(products);
+        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
+        {
+            return Results.BadRequest(error);
+        }
+
+        if (paging is null)
+        {
+            var products = await productSource.GetProductsAsync(cancellationToken);
+            return Results.Ok(products);
+        }
+
+        var pagedProducts = await productSource.GetProductsPageAsync(paging, cancellationToken);
+        return Results.Ok(pagedProducts);
     }
 
     public static async Task<IResult> GetProizvodAsync(
@@ -43,6 +56,8 @@ public static class ProizvodiEndpoints
     public static async Task<IResult> GetProizvodByTextInput(
         IProductSource productSource,
         string? q,
+        int? page = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(q))
@@ -50,8 +65,19 @@ public static class ProizvodiEndpoints
             return Results.BadRequest("Search term is required.");
         }
 
-        var products = await productSource.SearchProductsAsync(q, cancellationToken);
-        return Results.Ok(products);
+        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
+        {
+            return Results.BadRequest(error);
+        }
+
+        if (paging is null)
+        {
+            var products = await productSource.SearchProductsAsync(q, cancellationToken);
+            return Results.Ok(products);
+        }
+
+        var pagedProducts = await productSource.SearchProductsPageAsync(q, paging, cancellationToken);
+        return Results.Ok(pagedProducts);
     }
 
     public static async Task<IResult> PostUserCredentials(

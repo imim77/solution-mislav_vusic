@@ -17,6 +17,8 @@ public static class GetCategories
         string slug,
         decimal? minPrice,
         decimal? maxPrice,
+        int? page = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         var products = (await productSource.GetCategoryProductsAsync(slug, cancellationToken)).AsEnumerable();
@@ -31,6 +33,18 @@ public static class GetCategories
             products = products.Where(p => p.Price <= maxPrice.Value);
         }
 
-        return Results.Ok(products.ToList());
+        if (!PaginationParams.TryCreate(page, pageSize, out var paging, out var error))
+        {
+            return Results.BadRequest(error);
+        }
+
+        var filteredProducts = products.ToList();
+
+        if (paging is null)
+        {
+            return Results.Ok(filteredProducts);
+        }
+
+        return Results.Ok(PagedResult.Create(filteredProducts, paging.Page, paging.PageSize));
     }
 }

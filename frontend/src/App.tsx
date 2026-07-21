@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import ProductCard from './components/ProductList'
+import ProductList from './components/ProductList'
 import ProductListFilters, { type ProductFilters } from './components/ProductListFilters'
 import Navbar from './components/Navbar'
 import { paramsToFilters, filtersToParams } from './utils/filters'
 import Pagination from './components/Pagination'
-import { getPageItems, getTotalPages, getVisibleRange } from './utils/pagination'
+import { getVisibleRange } from './utils/pagination'
 import { useQuery } from '@tanstack/react-query'
 import { productsQueryOptions } from './hooks/productsQueryOptions'
 import { PAGE_SIZE } from './constants'
@@ -14,13 +14,14 @@ function App() {
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = paramsToFilters(searchParams)
-  const productsQuery = useQuery(productsQueryOptions(filters));
+  const productsQuery = useQuery(productsQueryOptions(filters, page));
 
-  const products = productsQuery.data ?? []
-  const totalPages = getTotalPages(products.length, PAGE_SIZE)
+  const pagedProducts = productsQuery.data
+  const products = pagedProducts?.items ?? []
+  const totalCount = pagedProducts?.totalCount ?? 0
+  const totalPages = pagedProducts?.totalPages ?? 0
   const currentPage = totalPages > 0 ? Math.min(page, totalPages) : 1
-  const visibleProducts = getPageItems(products, currentPage, PAGE_SIZE)
-  const visibleRange = getVisibleRange(products.length, currentPage, PAGE_SIZE)
+  const visibleRange = getVisibleRange(totalCount, currentPage, PAGE_SIZE)
 
   const handleFiltersChange = useCallback((next: ProductFilters) => {
     setPage(1)
@@ -48,7 +49,7 @@ function App() {
 
           {!productsQuery.isLoading && products.length > 0 && (
             <p className="font-mono text-sm text-greyscale-500">
-              Showing {visibleRange.from}–{visibleRange.to} of {products.length} products
+              Showing {visibleRange.from}–{visibleRange.to} of {totalCount} products
             </p>
           )}
 
@@ -56,7 +57,7 @@ function App() {
             <p className="font-mono text-sm text-greyscale-500">No products found.</p>
           )}
 
-          {!productsQuery.isError && <ProductCard products={visibleProducts} />}
+          {!productsQuery.isError && <ProductList products={products} />}
 
           {!productsQuery.isError && (
             <Pagination

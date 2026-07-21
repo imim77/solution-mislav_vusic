@@ -15,12 +15,6 @@
   font-style: normal;
   font-display: swap;
 }
-/* Korišten GPT 5.5 u OpenCode harnessu sa Anthropic frontend-design skillom.
-/* AI PROMPT: You are an expert in UI design. My goal is to have a very nicely designed website and i need your help. Modify
-the index.css file with new styles. Use your /frontend-design skill. DO NOT MODIFY ANY FILE APART FROM index.css!!!
-
-
-
 /* ----------------------------------------------------------------------------
    Design tokens
    Subject: a small storefront / stockroom catalogue. Constraint: the existing

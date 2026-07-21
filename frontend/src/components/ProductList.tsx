@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom'
-import type {Product} from '../models/Products'
+import type { Product } from '../models/Products'
 
 type ProductListProps = {
     products: Product[];
 }
 
-export default function ProductCard({products}: ProductListProps) {
+export default function ProductList({ products }: ProductListProps) {
   if (products.length === 0) return null
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((product) => (
         <Link
-          key={`${product.title}-${product.thumbnail}`}
+          key={product.id}
           to={`/products/${product.id}`}
           className="flex flex-col overflow-hidden rounded-lg bg-greyscale-200"
         >

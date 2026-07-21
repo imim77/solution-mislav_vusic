@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { MouseEvent } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { isAuthenticated } from '../utils/auth'
 
@@ -11,7 +12,7 @@ function Navbar() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
-  const handleLinkClick = (e: React.MouseEvent, requiresAuth: boolean) => {
+  const handleLinkClick = (e: MouseEvent, requiresAuth: boolean) => {
     setOpen(false)
     if (requiresAuth && !isAuthenticated()) {
       e.preventDefault()

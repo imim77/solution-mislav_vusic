@@ -3,8 +3,6 @@ import { STARS } from '../constants'
 interface StarRatingProps {
   rating: number
 }
-// Claude Sonnet 5 (medium reasoning)
-// Prompt: You are an Recat TypeScript expert. Create me a star component for reviews section of my page.
 
 function StarRating({ rating }: StarRatingProps) {
   const rounded = Math.round(rating)

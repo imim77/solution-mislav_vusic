@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import type React from 'react'
+import type { SubmitEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { client } from '../Client'
 import { INPUT_CLASS_FULL } from '../constants'
 
-const inputClass = INPUT_CLASS_FULL
-
-function LoginInPage() {
+function LoginPage() {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -14,7 +12,7 @@ function LoginInPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!username.trim() || !password.trim()) return
 
@@ -51,7 +49,7 @@ function LoginInPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
               autoComplete="username"
-              className={inputClass}
+              className={INPUT_CLASS_FULL}
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -65,7 +63,7 @@ function LoginInPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               autoComplete="current-password"
-              className={inputClass}
+              className={INPUT_CLASS_FULL}
             />
           </div>
           {error && (
@@ -93,4 +91,4 @@ function LoginInPage() {
   )
 }
 
-export default LoginInPage
+export default LoginPage

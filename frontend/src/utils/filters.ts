@@ -1,10 +1,9 @@
-import type { ProductFilters } from "../components/ProductListFilters";
-import { EMPTY_FILTERS } from "../constants";
+import type { ProductFilters } from "../models/Filters";
 
-const parsePrice = (value: string | null): number | null => {
+export const parsePrice = (value: string | null): number | null => {
   if (value === null || value.trim() === "") return null;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 };
 
 export function paramsToFilters(
@@ -33,5 +32,3 @@ export function filtersToParams(
   setOrDelete("maxPrice", filters.maxPrice == null ? "" : String(filters.maxPrice));
   return next;
 }
-
-export { EMPTY_FILTERS };
